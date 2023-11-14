@@ -14,3 +14,157 @@ datasource db {
   // https://neon.tech/docs/guides/prisma-migrate#configure-a-shadow-database-for-prisma-migrate
   directUrl = env("DIRECT_URL")
 }
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id                     String           @id @default(cuid())
+  name                   String?
+  email                  String?          @unique
+  emailVerified          DateTime?
+  image                  String?
+  coverImage             String?
+  accounts               Account[]
+  sessions               Session[]
+  createdAt              DateTime         @default(now())
+  about                  String?
+  profession             String?
+  dob                    DateTime?
+  gender                 Gender?
+  xp                     Int              @default(1)
+  showXP                 Boolean          @default(true)
+  showFollowersFollowing Boolean          @default(true)
+  showAchievementBadges  Boolean          @default(true)
+  badges                 String[]
+  followedBy             Follows[]        @relation("following", references: [])
+  following              Follows[]        @relation("follower", references: [])
+  githubProfile          String?
+  linkedinProfile        String?
+  instagramProfile       String?
+  facebookProfile        String?
+  dribbleProfile         String?
+  behanceProfile         String?
+  youtubeProfile         String?
+  playgrounds            Playground[]
+  visiblePlaygrounds     Playground[]     @relation("visiblePlaygrounds")
+  projects               Project[]
+  visibleProjects        Project[]        @relation("visibleProjects")
+  certificates           Certificate[]
+  workExperiences        WorkExperience[]
+  education              Education[]
+  techSkills             String[]
+  interests              String[]
+  languages              String[]
+}
+
+model WorkExperience {
+  id          String    @id @default(cuid())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  title       String
+  location    String
+  company     String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+}
+
+model Education {
+  id          String    @id @default(cuid())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  institution String
+  location    String
+  degree      String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+
+  @@unique([userId, degree, location])
+}
+
+model Certificate {
+  title          String
+  issuedOn       DateTime
+  credentialLink String
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([title, userId])
+}
+
+model Playground {
+  id                 String    @id @default(cuid())
+  title              String
+  createdAt          DateTime  @default(now())
+  createdBy          User      @relation(fields: [userId], references: [id])
+  language           Languages
+  userId             String
+  visiblePlaygrounds User[]    @relation("visiblePlaygrounds")
+}
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Project {
+  id              String      @id @default(cuid())
+  title           String
+  languagesUsed   Languages[] // Assuming multiple languages can be used
+  createdAt       DateTime    @default(now())
+  badges          String[]
+  image           String
+  createdBy       User        @relation(fields: [userId], references: [id])
+  userId          String
+  visibleProjects User[]      @relation("visibleProjects")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  TRANSGENDER
+}
+
+enum Languages {
+  HTML
+  JS
+  NEXTJS
+}
