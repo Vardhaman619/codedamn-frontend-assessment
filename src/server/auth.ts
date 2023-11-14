@@ -4,7 +4,7 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
@@ -17,11 +17,7 @@ import { db } from "~/server/db";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+    user: { id: string } & DefaultSession["user"];
   }
 
   // interface User {
@@ -36,20 +32,62 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt: async ({ token, user, trigger }) => {
+      console.log("calling JWT with ", user, token);
+      if (user) {
+        const { name, image: picture } = user;
+        token = {
+          ...token,
+          name,
+          picture,
+        };
+      }
+
+      // refresh the user's data if they update their name / email
+      if (trigger === "update") {
+        const refreshedUser = await db.user.findUnique({
+          where: { id: token.sub },
+          select: {
+            name: true,
+            image: true,
+          },
+        });
+        if (refreshedUser) {
+          token = {
+            ...token,
+            name: refreshedUser.name,
+            picture: refreshedUser.image,
+          };
+        } else {
+          return {};
+        }
+      }
+
+      return token;
+    },
+    session: ({ session, token }) => {
+      console.log("calling session with ", session, token);
+      const { email, picture: image, name, sub } = token;
+      session.user = {
+        id: sub!,
+        email,
+        image,
+        name,
+      };
+      console.log("session is ", { session });
+      return session;
+    },
   },
   adapter: PrismaAdapter(db),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     /**
      * ...add more providers here.
