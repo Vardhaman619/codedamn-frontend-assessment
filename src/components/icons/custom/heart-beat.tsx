@@ -8,7 +8,7 @@ export default function HeartBeatIcon({ className, ...props }: IconProps) {
       height="56"
       viewBox="0 0 59 56"
       fill="none"
-      className={className}
+      className={cn("h-5 w-5", className)}
       {...props}
     >
       <g filter="url(#filter0_d_4_8276)">
