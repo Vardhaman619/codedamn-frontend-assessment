@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 import type { IconProps } from "../types";
-export default function JsIcon({ className, ...props }: IconProps) {
+export default function JavascriptIcon({ className, ...props }: IconProps) {
   return (
     <svg
       viewBox="0 0 40 40"
