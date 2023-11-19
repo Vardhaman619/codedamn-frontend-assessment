@@ -77,3 +77,8 @@
     @apply bg-background text-foreground;
   }
 }
+@layer utilities {
+  .dialog-container {
+    width: calc(100% - 16px);
+  }
+}
