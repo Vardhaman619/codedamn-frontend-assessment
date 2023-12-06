@@ -127,10 +127,8 @@ export default function ResumeForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.languages]);
   const addTechSkill = () => {
-    console.log("addtechskill", techSkillsInputRef.current);
     if (!techSkillsInputRef.current) return;
     const currentTechSkill = techSkillsInputRef.current?.value;
-    console.log(currentTechSkill);
     const result = techSkillArraySchema.safeParse([
       ...state.techSkills,
       currentTechSkill,
@@ -199,7 +197,6 @@ export default function ResumeForm({
       currentLanguage,
     ]);
     if (!result.success) {
-      console.log(result.error.issues[0]?.message);
       form.setError("languages", { message: result.error.issues[0]?.message });
       return toast({
         title: result.error.issues[0]?.message,
@@ -229,7 +226,6 @@ export default function ResumeForm({
     }
     dispatch({ type: "SET_LANGUAGES", payload: updatedLangauges });
   }
-  // const WorkExperiance = null;
   function handelFormSubmit(formdata: ResumeFormSchema) {
     startTranstion(async () => {
       const result = await ResumeFormAction(formdata);
@@ -450,10 +446,3 @@ export default function ResumeForm({
     </section>
   );
 }
-
-// function checkIfItemExists(array: string[], item: string) {
-//   const alreadyExists = array.findIndex(
-//     (element) => element.toLowerCase() === item.toLowerCase(),
-//   );
-//   return alreadyExists >= 0 ? true : false;
-// }

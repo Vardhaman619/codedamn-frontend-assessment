@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
@@ -25,7 +24,10 @@ export default function WorkExperianceCard({
     endDate ? format(endDate, "MMM yyyy") : "Present"
   }`;
   return (
-    <Card variant={"secondary"} className="flex items-start gap-4 p-6">
+    <Card
+      variant={"secondary"}
+      className="flex flex-col items-start gap-4 p-6 md:flex-row"
+    >
       <div>
         <WorkExperianceIcon className="h-10 w-10" />
       </div>
@@ -34,9 +36,9 @@ export default function WorkExperianceCard({
           <CardTitle className="text-xl font-semibold">
             {title} at {company}
           </CardTitle>
-          <div className="mt-1 flex w-full items-end  justify-between text-card-foreground">
+          <div className="mt-1 flex w-full flex-wrap-reverse items-end  justify-between gap-x-8 text-card-foreground">
             <CardDescription className="text-inherit">
-              <span className="flex items-center gap-2 ">
+              <span className="flex items-end gap-2 ">
                 {location}
                 <span>•</span>
                 {company}

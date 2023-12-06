@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 import Header from "~/components/shared/header";
 import { Toaster } from "~/components/ui/toaster";
+import Footer from "~/components/shared/footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,10 +22,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} px-10 pt-5`}>
+      <body
+        className={`font-sans ${inter.variable} flex min-h-screen flex-col px-4 pt-5 md:px-10`}
+      >
         <Header />
-        {children}
+        <div className="flex-grow">{children}</div>
         <Toaster />
+        <Footer />
       </body>
     </html>
   );

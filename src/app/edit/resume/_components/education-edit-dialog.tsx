@@ -49,15 +49,7 @@ export default function EducationEditDialog({
   degree,
 }: EducationEditDialogProps) {
   const [open, setOpen] = useState(false);
-  console.log({
-    id,
-    institution,
-    description,
-    location,
-    startDate,
-    degree,
-    endDate,
-  });
+
   const form = useForm<EducationEditSchema>({
     resolver: zodResolver(educationEditSchema),
     defaultValues: {
@@ -77,7 +69,6 @@ export default function EducationEditDialog({
   );
   const { isDirty, isSubmitting } = form.formState;
   const isFormDisable = isSubmitting || isPending;
-  // console.log(isPending, errors, currentPursuing, form.getValues());
   function handelFormSubmit(formdata: EducationEditSchema) {
     startTranstion(async () => {
       const result = await EducationEditAction(formdata);
@@ -109,7 +100,6 @@ export default function EducationEditDialog({
       }
     });
   }
-  // console.log(id, degree, institution);
 
   useEffect(() => {
     if (currentPursuing) {

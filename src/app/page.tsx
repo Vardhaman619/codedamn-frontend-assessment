@@ -5,7 +5,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import Bookmark from "~/components/icons/custom/bookmark";
 import EditIcon from "~/components/icons/custom/edit";
 import LocationIcon from "~/components/icons/custom/location";
 import BehanceIcon from "~/components/icons/socials/behance";
@@ -15,7 +14,7 @@ import InstagramIcon from "~/components/icons/socials/instagram";
 import LinkedinIcon from "~/components/icons/socials/linkedin";
 import YoutubeIcon from "~/components/icons/socials/youtube";
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   TypographyH2,
   TypographyH3,
@@ -39,12 +38,15 @@ import WorkExperianceCard from "./_components/work-experiance-card";
 
 import NoDataIllustration from "~/components/illustrations/no-data";
 import langToIcon from "~/lib/lang-to-icon";
-import { Languages } from "@prisma/client";
+import { type Languages } from "@prisma/client";
 import UserIcon from "~/components/icons/custom/user";
 import { cn } from "~/lib/utils";
 import DribbleIcon from "~/components/icons/socials/dribble";
 import BadgeIcon from "~/components/icons/custom/badge";
-
+import CoverImageContainer from "~/components/shared/cover-image/cover-image";
+import CreateProjectDialog from "~/components/shared/project/project-create-dialog";
+import CreateCertificateDialog from "~/components/shared/certificate/certificate-create-dialog";
+import { KARMA_POINTS, LEAGUE, STREAK, XP } from "~/constants";
 async function getUserData(userId: string) {
   return await db.user.findUnique({
     where: {
@@ -54,7 +56,6 @@ async function getUserData(userId: string) {
       name: true,
       email: true,
       image: true,
-      coverImage: true,
       about: true,
       profession: true,
       xp: true,
@@ -66,7 +67,7 @@ async function getUserData(userId: string) {
       dribbleProfile: true,
       behanceProfile: true,
       youtubeProfile: true,
-      playgrounds: {
+      visiblePlaygrounds: {
         select: {
           id: true,
           title: true,
@@ -74,8 +75,8 @@ async function getUserData(userId: string) {
           createdAt: true,
         },
       },
-      visiblePlaygrounds: true,
-      projects: {
+
+      visibleProjects: {
         select: {
           id: true,
           title: true,
@@ -84,9 +85,10 @@ async function getUserData(userId: string) {
           image: true,
         },
       },
-      visibleProjects: true,
+
       certificates: {
         select: {
+          id: true,
           image: true,
           title: true,
           issuedOn: true,
@@ -124,22 +126,22 @@ async function getUserData(userId: string) {
 const states = [
   {
     name: "Longest streak",
-    value: 2,
+    value: STREAK,
     icon: <ThunderIcon className="h-8 w-8 text-primary" />,
   },
   {
     name: "Experience points",
-    value: 1200,
+    value: XP,
     icon: <StarFourIcon className="h-8 w-8 text-sky-500" />,
   },
   {
     name: "Current league",
-    value: "Novice",
+    value: LEAGUE,
     icon: <TrophyIcon className="h-8 w-8 text-orange-500" />,
   },
   {
     name: "Karma points",
-    value: 120,
+    value: KARMA_POINTS,
     icon: (
       <HeartBeatIcon className="h-14 w-14 -translate-x-3 translate-y-1 text-pink-500" />
     ),
@@ -150,6 +152,7 @@ export default async function HomePage() {
   if (!session) {
     redirect("/api/auth/sigin");
   }
+
   const userData = await getUserData(session.user.id);
 
   if (!userData) {
@@ -163,7 +166,6 @@ export default async function HomePage() {
     behanceProfile,
     githubProfile,
     certificates,
-    coverImage,
     dribbleProfile,
     educations,
     facebookProfile,
@@ -172,12 +174,10 @@ export default async function HomePage() {
     interests,
     languages,
     linkedinProfile,
-    playgrounds,
     profession,
-    projects,
     techSkills,
-    visiblePlaygrounds,
-    visibleProjects,
+    visiblePlaygrounds: playgrounds,
+    visibleProjects: projects,
     workExperiences,
     xp,
     youtubeProfile,
@@ -186,26 +186,9 @@ export default async function HomePage() {
   return (
     <main className="mx-auto mb-32 mt-16 flex max-w-screen-md flex-col gap-10">
       <section>
-        <div
-          className={cn(
-            `relative flex h-44 flex-row-reverse rounded-t-2xl border  bg-cover bg-center p-6`,
-            {
-              "bg-gradient-to-r from-blue-500 via-sky-500 to-purple-600 to-90%":
-                !coverImage,
-            },
-          )}
-          // style={{ backgroundImage: `url('${coverImage}')` }}
-        >
-          <Button
-            className="gap-2 opacity-70 backdrop-blur-sm "
-            variant={"secondary"}
-          >
-            <EditIcon className="h-4 w-4 stroke-secondary-foreground" />
-            Edit Cover
-          </Button>
-        </div>
-        <div className="relative rounded-b-2xl border border-border pb-8 pe-6 pl-48 pt-6">
-          <div className="absolute -top-16 left-6 overflow-visible">
+        <CoverImageContainer userId={session.user.id} />
+        <div className="relative rounded-b-2xl border border-border pb-8 pe-6 pl-6 pt-24 md:pl-48 md:pt-6">
+          <div className="absolute -top-16 left-1/2 -translate-x-1/2 overflow-visible md:left-0 md:translate-x-4">
             <Avatar className="h-36 w-36">
               <AvatarImage src={image ?? undefined} />
               <AvatarFallback>
@@ -221,43 +204,49 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-y-8">
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-wrap gap-3">
-                <TypographyH2 className="border-0">{name}</TypographyH2>
-                {badges.map((badge) => (
-                  <Badge size={"large"} key={badge}>
-                    {badge}
-                  </Badge>
-                ))}
+          <div className="flex flex-col gap-y-8 ">
+            <div className="flex flex-col items-center gap-2 md:items-start">
+              <div className="flex flex-col flex-wrap items-center gap-3 md:flex-row">
+                <TypographyH2 className="border-0 text-center capitalize md:text-start">
+                  {name}
+                </TypographyH2>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  {badges.map((badge) => (
+                    <Badge size={"base"} className="text-sm" key={badge}>
+                      {badge}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-              <TypographyMuted>{profession}</TypographyMuted>
+              <TypographyMuted className="font-medium">
+                {profession}
+              </TypographyMuted>
               <TypographyMuted className="inline-flex items-center gap-1 text-zinc-400">
                 <LocationIcon className="h-4 w-4" />
                 Remote, India
               </TypographyMuted>
             </div>
-            <div className="flex flex-wrap gap-3">
-              {techSkills.length > 0
-                ? techSkills.map((techSkill) => {
-                    return (
-                      <Badge
-                        variant={"secondary"}
-                        size={"large"}
-                        key={techSkill}
-                      >
-                        {techSkill}
-                      </Badge>
-                    );
-                  })
-                : null}
+            <div className="flex flex-wrap justify-center gap-3 md:justify-start">
+              {techSkills?.length > 0 &&
+                techSkills.map((techSkill) => {
+                  return (
+                    <Badge
+                      variant={"secondary"}
+                      size={"large"}
+                      className="text-xs"
+                      key={techSkill}
+                    >
+                      {techSkill}
+                    </Badge>
+                  );
+                })}
             </div>
             <hr className="border-border" />
             <div
-              className="flex flex-wrap items-start justify-between
+              className="flex flex-wrap items-start justify-between gap-6
             "
             >
-              <div className="flex gap-4 ">
+              <div className="flex flex-wrap gap-4">
                 {githubProfile ? (
                   <Button size={"icon"} variant={"outline"} asChild>
                     <a href={githubProfile}>
@@ -313,13 +302,18 @@ export default async function HomePage() {
                 ) : null}
               </div>
               <div className="flex gap-4">
-                <Button
-                  variant={"secondary"}
-                  className="h-10 w-10"
-                  size={"icon"}
+                <Link
+                  href={"/edit"}
+                  className={cn(
+                    buttonVariants({
+                      variant: "secondary",
+                      size: "icon",
+                      className: "h-10 w-10",
+                    }),
+                  )}
                 >
-                  <Bookmark className="h-4 w-4" />
-                </Button>
+                  <EditIcon className="h-4 w-4" />
+                </Link>
                 <Button size={"lg"} asChild>
                   <a href={`mailto:${email}`} target="_blank">
                     Contact
@@ -340,10 +334,10 @@ export default async function HomePage() {
             <TabsContent value="portfolio" className="mt-10 space-y-10">
               <section className="flex flex-col gap-6">
                 <h4 className="text-2xl font-bold">Stats</h4>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                   {states.map((state) => (
                     <Card key={state.name} variant={"secondary"}>
-                      <CardContent className="flex flex-row items-center gap-x-4 px-5 py-3">
+                      <CardContent className="flex flex-row items-center gap-x-4 px-5 py-5 md:py-3">
                         <div className="w-7">{state.icon}</div>
                         <div className="flex flex-col">
                           <strong className="text-xl leading-7">
@@ -359,19 +353,13 @@ export default async function HomePage() {
               <section className="pb-4">
                 <div className="mb-6 flex items-center justify-between">
                   <h4 className="text-2xl font-bold">Projects</h4>
-                  <Button
-                    variant={"secondary"}
-                    className="text-primary"
-                    size={"lg"}
-                  >
-                    Create new project
-                  </Button>
+                  <CreateProjectDialog />
                 </div>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 place-items-center gap-5 md:grid-cols-2">
                   {projects?.length > 0 ? (
-                    projects.map((project) => (
-                      <ProjectCard key={project.id} {...project} />
-                    ))
+                    projects.map((project) => {
+                      return <ProjectCard key={project.id} {...project} />;
+                    })
                   ) : (
                     <div className="col-span-2 grid w-full place-items-center gap-5 bg-muted p-4">
                       <NoDataIllustration className="w-56 text-primary" />
@@ -385,15 +373,9 @@ export default async function HomePage() {
               <section>
                 <div className="mb-6 flex items-center justify-between">
                   <h4 className="text-2xl font-bold">Playgrounds</h4>
-                  <Button
-                    variant={"secondary"}
-                    className="text-primary"
-                    size={"lg"}
-                  >
-                    Create new playground
-                  </Button>
+                  <CreateProjectDialog />
                 </div>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 place-items-center gap-5 md:grid-cols-2">
                   {playgrounds.length > 0 ? (
                     playgrounds.map((playground) => (
                       <PlaygroundCard key={playground.id} {...playground} />
@@ -411,15 +393,9 @@ export default async function HomePage() {
               <section>
                 <div className="mb-6 flex items-center justify-between">
                   <h4 className="text-2xl font-bold">Certificates</h4>
-                  <Button
-                    variant={"secondary"}
-                    className="text-primary"
-                    size={"lg"}
-                  >
-                    Add new Certificate
-                  </Button>
+                  <CreateCertificateDialog />
                 </div>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 place-items-center gap-5 md:grid-cols-2">
                   {certificates.length > 0 ? (
                     certificates.map((certificate, index) => (
                       <CertificateCard key={index} {...certificate} />
@@ -492,15 +468,16 @@ export default async function HomePage() {
                   <div className="flex flex-wrap gap-5">
                     {techSkills.map((techSkill) => {
                       const Icon = langToIcon(
-                        String(techSkill).toUpperCase() as Languages,
+                        String(techSkill).trim().toUpperCase() as Languages,
                       );
                       return (
                         <Badge
                           variant={"secondary"}
                           size={"large"}
+                          className="text-xs"
                           key={techSkill}
                         >
-                          <Icon />
+                          {Icon && <Icon />}
                           {techSkill}
                         </Badge>
                       );
@@ -521,6 +498,7 @@ export default async function HomePage() {
                       <Badge
                         variant={"secondary"}
                         size={"large"}
+                        className="text-xs"
                         key={interest}
                       >
                         {interest}
@@ -542,6 +520,7 @@ export default async function HomePage() {
                       <Badge
                         variant={"secondary"}
                         size={"large"}
+                        className="text-xs"
                         key={language}
                       >
                         {language}

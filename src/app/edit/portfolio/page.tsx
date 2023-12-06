@@ -41,7 +41,6 @@ async function getUserProjectsPlaygroundsData(userId: string) {
   });
 }
 export default async function PortfolioPage() {
-  // const delay = await new Promise((resolve) => setTimeout(resolve, 10000));
   const session = await getServerAuthSession();
   if (!session) {
     redirect("/api/auth/sigin");

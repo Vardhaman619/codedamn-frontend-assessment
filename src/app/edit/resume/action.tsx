@@ -88,7 +88,7 @@ export async function EducationAddAction(data: EducationSchema) {
         id: session.user.id,
       },
       data: {
-        education: {
+        educations: {
           create: educationData,
         },
       },
@@ -176,7 +176,7 @@ export async function EducationEditAction(data: EducationEditSchema) {
         id: session.user.id,
       },
       data: {
-        education: {
+        educations: {
           update: {
             where: {
               id: id,

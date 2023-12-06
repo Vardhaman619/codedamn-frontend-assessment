@@ -3,7 +3,7 @@ import { TypographyH3 } from "~/components/ui/typography";
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
 import EducationCard from "./_components/education-card";
-import NoDataIllustration from "~/components/shared/nodata-illustration";
+import NoDataIllustration from "~/components/illustrations/no-data";
 import WorkExperianceCard from "./_components/work-experiance-card";
 import ResumeForm from "./_components/resume-form";
 import EducationCreateDialog from "./_components/education-create-dialog";
@@ -109,7 +109,7 @@ export default async function ResumeEditPage() {
       </section>
       <hr className="border-b border-border" />
       <ResumeForm
-        languages={languages}
+        languages={languages ?? ["english"]}
         interests={interests}
         techSkills={techSkills}
       />

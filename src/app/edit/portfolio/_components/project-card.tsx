@@ -1,5 +1,4 @@
 "use client";
-import { Fragment } from "react";
 import { Card } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import langToIcon from "~/lib/lang-to-icon";
@@ -7,7 +6,7 @@ import { type CheckedState, Root } from "@radix-ui/react-checkbox";
 import { TypographyH4, TypographySmall } from "~/components/ui/typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import type { Languages } from "@prisma/client";
-import ProjectDeleteDialog from "./project-delete-dialog";
+import ProjectDeleteDialog from "~/components/shared/project/project-delete-dialog";
 
 type ProjectCardProps = {
   id: string;
@@ -33,7 +32,7 @@ export default function ProjectCard({
   return (
     <Root asChild checked={checked} onCheckedChange={onCheckedChange}>
       <Card
-        className="flex cursor-pointer flex-col gap-y-5 p-4 hover:bg-primary/10 data-[state=checked]:border data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 data-[state=checked]:hover:bg-opacity-20"
+        className="flex max-w-sm cursor-pointer flex-col gap-y-5 p-4 hover:bg-primary/10 data-[state=checked]:border data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 data-[state=checked]:hover:bg-opacity-20"
         role="checkbox"
       >
         <div className="relative w-full">
@@ -63,26 +62,31 @@ export default function ProjectCard({
             <TypographyH4>{title}</TypographyH4>
             <ProjectDeleteDialog id={id} />
           </div>
-          <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2 gap-y-3 text-muted-foreground">
             {languagesUsed?.length &&
-              languagesUsed.map((language) => {
+              languagesUsed.map((language, index) => {
                 const LangIcon = langToIcon(language);
                 return (
-                  <Fragment key={language}>
+                  <div key={language} className="flex items-center gap-2">
+                    {index > 0 && (
+                      <span className="inline-block h-1 w-1 rounded-full bg-muted-foreground"></span>
+                    )}
                     <TypographySmall className="flex items-center gap-1">
                       <span>
                         <LangIcon />
                       </span>{" "}
                       {language}
                     </TypographySmall>
-                    <span className="inline-block h-1 w-1 rounded-full bg-muted-foreground"></span>
-                  </Fragment>
+                  </div>
                 );
               })}
             <time
               dateTime={createdAt.toISOString()}
-              className={"text-sm font-medium leading-none "}
+              className={
+                "flex items-center gap-2 text-sm font-medium leading-none"
+              }
             >
+              <span className="inline-block h-1 w-1 rounded-full bg-muted-foreground"></span>
               {formatDistanceToNow(createdAt, { addSuffix: true })}
             </time>
           </div>
@@ -90,17 +94,17 @@ export default function ProjectCard({
             <div className="flex -space-x-0.5 [&>*]:outline [&>*]:outline-border">
               <Avatar role="button" variant={"small"}>
                 <AvatarImage
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bella&backgroundColor=65c9ff,c0aede"
-                  alt={`contributor 1 profile photo`}
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peanut&backgroundColor=d1d4f9,b6e3f4,ffdfbf"
+                  alt={`contributor's profile photo`}
                 />
                 <AvatarFallback>C1</AvatarFallback>
               </Avatar>
               <Avatar role="button" variant={"small"}>
                 <AvatarImage
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bella&backgroundColor=65c9ff,c0aede"
-                  alt={`contributor 1 profile photo`}
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peanut&backgroundColor=d1d4f9,b6e3f4,ffdfbf"
+                  alt={`contributor's profile photo`}
                 />
-                <AvatarFallback>C1</AvatarFallback>
+                <AvatarFallback>C2</AvatarFallback>
               </Avatar>
             </div>
             <p className="text-xs font-normal text-muted-foreground">

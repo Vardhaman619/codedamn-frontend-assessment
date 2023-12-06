@@ -17,38 +17,39 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/ui/use-toast";
+import { WorkExperianceDeleteAction } from "../action";
 
 export default function WorkExperianceDeleteDialog({ id }: { id: string }) {
   const [open, setOpen] = useState(false);
   const [isPending, startTranstion] = useTransition();
   const { toast } = useToast();
   function deleteWorkExperiance() {
-    // startTranstion(async () => {
-    //   const result = await DeleteWorkExperianceAction(id);
-    //   if (result.error) {
-    //     if (result.errors) {
-    //       toast({
-    //         title: result.message,
-    //         variant: "destructive",
-    //       });
-    //       return;
-    //     }
-    //     toast({
-    //       title: result.message,
-    //       variant: "destructive",
-    //     });
-    //     return;
-    //   }
-    //   if (result.success) {
-    //     toast({
-    //       title: result.message,
-    //       variant: "default",
-    //     });
-    //     setTimeout(() => {
-    //       setOpen(false);
-    //     }, 200);
-    //   }
-    // });
+    startTranstion(async () => {
+      const result = await WorkExperianceDeleteAction(id);
+      if (result.error) {
+        if (result.errors) {
+          toast({
+            title: result.message,
+            variant: "destructive",
+          });
+          return;
+        }
+        toast({
+          title: result.message,
+          variant: "destructive",
+        });
+        return;
+      }
+      if (result.success) {
+        toast({
+          title: result.message,
+          variant: "default",
+        });
+        setTimeout(() => {
+          setOpen(false);
+        }, 200);
+      }
+    });
   }
 
   return (

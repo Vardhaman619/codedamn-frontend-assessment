@@ -47,20 +47,5 @@ export const profileFormSchema = z.object({
       .transform((url) => (typeof window === "undefined" ? undefined : url)),
   ]),
 });
-// .refine(
-//   (file) =>
-//     file != null && typeof window === "undefined"
-//       ? true
-//       : file instanceof File,
-//   "Image is required.",
-// )
-// .refine((file) => file?.size <= 400000, `Max file size is 4MB.`)
-// .refine(
-//   (file) =>
-//     ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-//       file?.type,
-//     ),
-//   ".jpg, .jpeg, .png and .webp files are accepted.",
-// ),
-// });
+
 export type ProfileFormSchema = z.infer<typeof profileFormSchema>;

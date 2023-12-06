@@ -161,7 +161,6 @@ function ProfileForm({
                         {...field}
                         onChange={(e) => {
                           if (e.target.files?.length && e.target.files[0]) {
-                            console.log(e.target.files[0]);
                             onChange(
                               Object.assign(e.target.files[0], {
                                 preview: URL.createObjectURL(e.target.files[0]),

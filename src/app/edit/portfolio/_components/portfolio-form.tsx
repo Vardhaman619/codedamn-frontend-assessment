@@ -1,9 +1,7 @@
 "use client";
 
 import { type Playground, type Project } from "@prisma/client";
-// import formatDistanceToNow from "date-fns/formatDistanceToNow";
-// import format from "date-fns/format";
-import { memo, useCallback, useEffect, useMemo, useTransition } from "react";
+import { memo, useCallback, useEffect, useTransition } from "react";
 import { type PortfolioFormSchema, portfolioFormSchema } from "./schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,12 +12,12 @@ import { Form, FormField } from "~/components/ui/form";
 import { TypographyH3 } from "~/components/ui/typography";
 import PlaygroundCard from "./playground-card";
 import { type CheckedState } from "@radix-ui/react-checkbox";
-import PlaygroundCreateDialog from "./playground-create-dialog";
 import ProjectCard from "./project-card";
-import CreateProjectDialog from "./project-create-dialog";
 import { PortfolioFormAction } from "../action";
 import { useToast } from "~/components/ui/use-toast";
-import NoDataIllustration from "~/components/shared/nodata-illustration";
+import NoDataIllustration from "~/components/illustrations/no-data";
+import PlaygroundCreateDialog from "~/components/shared/playground/playground-create-dialog";
+import CreateProjectDialog from "~/components/shared/project/project-create-dialog";
 
 type PortfolioFormProps = {
   playgrounds: Omit<Playground, "userId">[];
@@ -80,7 +78,6 @@ function PortfolioForm({
   function handelFormSubmit(formdata: PortfolioFormSchema) {
     startTranstion(async () => {
       const result = await PortfolioFormAction(formdata);
-      console.log(result);
       if (result.error) {
         if (result.errors) {
           for (const [field, errors] of Object.entries(result.errors)) {
@@ -125,7 +122,7 @@ function PortfolioForm({
             <PlaygroundCreateDialog />
           </div>
           {playgrounds.length > 0 ? (
-            <div className="grid grid-cols-2 gap-5 ">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 ">
               <FormField
                 control={form.control}
                 name="playgrounds"
@@ -166,7 +163,7 @@ function PortfolioForm({
               <CreateProjectDialog />
             </div>
             {projects.length > 0 ? (
-              <div className="grid grid-cols-2 gap-5 ">
+              <div className="grid grid-cols-1 place-items-center gap-5 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="projects"

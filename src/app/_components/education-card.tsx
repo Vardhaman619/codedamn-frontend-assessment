@@ -26,14 +26,17 @@ export default function EducationCard({
     endDate ? format(endDate, "MMM yyyy") : "Present"
   }`;
   return (
-    <Card variant={"secondary"} className="flex items-start gap-4 p-6 ">
+    <Card
+      variant={"secondary"}
+      className="flex flex-col items-start gap-4 p-6 md:flex-row"
+    >
       <div>
         <EducationIcon className="h-10 w-10" />
       </div>
       <div className="w-full">
         <CardHeader className="p-0">
           <CardTitle className="text-xl font-semibold">{institution}</CardTitle>
-          <div className="mt-1 flex w-full items-end  justify-between text-card-foreground">
+          <div className="mt-1 flex w-full flex-wrap-reverse items-end justify-between gap-x-8 text-card-foreground">
             <CardDescription className="text-inherit">
               <span className="flex items-center gap-2">
                 {location}

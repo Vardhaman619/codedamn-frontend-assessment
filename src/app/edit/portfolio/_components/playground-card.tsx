@@ -56,12 +56,18 @@ function PlaygroundCard({
         <div className="mt-1 flex items-center gap-2">
           <div className="flex -space-x-1">
             <Avatar role="button" variant={"small"}>
-              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Garfield&flip=true&backgroundColor=ffd5dc" />
-              <AvatarFallback>UZ</AvatarFallback>
+              <AvatarImage
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peanut&backgroundColor=d1d4f9,b6e3f4,ffdfbf"
+                alt="user avatar"
+              />
+              <AvatarFallback>P1</AvatarFallback>
             </Avatar>
             <Avatar role="button" variant={"small"}>
-              <AvatarImage src="https://api.dicebear.com/7.x/big-smile/svg?seed=Cookie&backgroundColor=b6e3f4" />
-              <AvatarFallback>UZ</AvatarFallback>
+              <AvatarImage
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peanut&backgroundColor=d1d4f9,b6e3f4,ffdfbf"
+                alt="user avatar"
+              />
+              <AvatarFallback>P2</AvatarFallback>
             </Avatar>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">

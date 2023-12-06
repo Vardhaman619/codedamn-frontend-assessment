@@ -13,7 +13,10 @@ function PlaygroundCard({ title, language, createdAt }: PlaygroundCardProps) {
   const Icon = langToIcon(language);
   const formatedCreatedAt = formatDistanceToNow(createdAt, { addSuffix: true });
   return (
-    <Card className={cn("flex flex-row gap-3 p-4")} variant={"secondary"}>
+    <Card
+      className={cn("flex max-w-sm flex-row gap-3 p-4 md:max-w-xl")}
+      variant={"secondary"}
+    >
       <span>
         <Icon className="h-10 w-10" />
       </span>
@@ -34,12 +37,18 @@ function PlaygroundCard({ title, language, createdAt }: PlaygroundCardProps) {
         <div className="mt-1 flex items-center gap-2">
           <div className="flex -space-x-1">
             <Avatar role="button" variant={"small"}>
-              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Garfield&flip=true&backgroundColor=ffd5dc" />
-              <AvatarFallback>UZ</AvatarFallback>
+              <AvatarImage
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peanut&backgroundColor=d1d4f9,b6e3f4,ffdfbf"
+                alt="user avatar"
+              />
+              <AvatarFallback>U1</AvatarFallback>
             </Avatar>
             <Avatar role="button" variant={"small"}>
-              <AvatarImage src="https://api.dicebear.com/7.x/big-smile/svg?seed=Cookie&backgroundColor=b6e3f4" />
-              <AvatarFallback>UZ</AvatarFallback>
+              <AvatarImage
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peanut&backgroundColor=d1d4f9,b6e3f4,ffdfbf"
+                alt="user avatar"
+              />
+              <AvatarFallback>U2</AvatarFallback>
             </Avatar>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">

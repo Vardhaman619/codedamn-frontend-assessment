@@ -4,6 +4,7 @@ import { Card } from "~/components/ui/card";
 import langToIcon from "~/lib/lang-to-icon";
 import { TypographyH4, TypographySmall } from "~/components/ui/typography";
 import type { Project } from "@prisma/client";
+import { Badge } from "~/components/ui/badge";
 
 type ProjectCardProps = Omit<Project, "userId" | "imageKey" | "createdAt">;
 
@@ -14,24 +15,24 @@ export default function ProjectCard({
   image,
 }: ProjectCardProps) {
   return (
-    <Card className="flex flex-col gap-y-5 p-4 " variant={"secondary"}>
+    <Card
+      className="flex max-w-sm flex-col gap-y-5 p-4 md:max-w-xl"
+      variant={"secondary"}
+    >
       <div className="relative w-full">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={image}
           className="aspect-video w-full bg-muted object-cover object-center"
-          alt={`${title} project image`}
+          alt={`${title ?? ""} project image`}
         />
         {badges?.length ? (
           <div className="absolute bottom-2 flex gap-3 px-2 text-xs">
             {badges.map((badge) => {
               return (
-                <button
-                  className="rounded bg-sky-300 px-3 py-0.5 font-semibold text-sky-900"
-                  key={badge}
-                >
+                <Badge key={badge} size={"base"}>
                   {badge}
-                </button>
+                </Badge>
               );
             })}
           </div>
@@ -42,7 +43,7 @@ export default function ProjectCard({
           <TypographyH4>{title}</TypographyH4>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
-          {languagesUsed.length > 0 &&
+          {languagesUsed?.length > 0 &&
             languagesUsed.map((language, index, currentArray) => {
               const LangIcon = langToIcon(language);
               const isLastItem = index == currentArray.length - 1;
