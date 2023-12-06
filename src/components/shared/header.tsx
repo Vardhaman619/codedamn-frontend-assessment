@@ -1,14 +1,35 @@
 import Link from "next/link";
 import ThunderIcon from "../icons/custom/thunder";
-import SearchIcon from "../icons/custom/search";
 import NotificationBellIcon from "../icons/custom/notification-bell";
 import { Button } from "../ui/button";
+import Search from "./search";
+import UserAvatarDropDown from "./user-avatar-dropdown";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import UserIcon from "../icons/custom/user";
+import { db } from "~/server/db";
+import { redirect } from "next/navigation";
 import { getServerAuthSession } from "~/server/auth";
-import UserAvatar from "./user-avatar";
+import { STREAK } from "~/constants";
+
+async function getUserAvatarImage(userId: string) {
+  return await db.user.findUnique({
+    select: {
+      image: true,
+    },
+    where: {
+      id: userId,
+    },
+  });
+}
 
 export default async function Header() {
   const session = await getServerAuthSession();
-  const streakNumber = 2;
+  if (!session) {
+    redirect("/api/auth/signin");
+    return;
+  }
+
+  const userAvatarImageData = await getUserAvatarImage(session.user.id);
   return (
     <header>
       <nav className="flex h-[52px] w-full justify-between">
@@ -17,25 +38,18 @@ export default async function Header() {
         </Link>
         <div className="flex items-center gap-6">
           <div>
-            <form className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-              <SearchIcon className="" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="placeholder:text-muted-foreground text-secondary-foreground focus:outline-0"
-              />
-            </form>
+            <Search />
           </div>
           <div className="flex items-center gap-4">
             <Button variant={"ghost"} className="gap-1">
               <ThunderIcon className="h-6 w-6 fill-primary" />
-              <span className="text-muted-foreground">{streakNumber}</span>
+              <span className="text-muted-foreground">{STREAK}</span>
             </Button>
 
             <Button
               size={"icon"}
               variant={"ghost"}
-              className="relative w-10 h-10"
+              className="relative h-10 w-10"
             >
               <NotificationBellIcon className="h-6 w-6" />
               <span className="absolute right-1 top-0.5 inline-block h-4 w-4 rounded-full bg-pink-500 text-xs font-bold text-white">
@@ -43,8 +57,15 @@ export default async function Header() {
               </span>
             </Button>
           </div>
-          <div className="relative">
-            <UserAvatar user={session?.user ?? null} />
+          <div>
+            <UserAvatarDropDown>
+              <Avatar role="button">
+                <AvatarImage src={userAvatarImageData?.image ?? ""} />
+                <AvatarFallback>
+                  <UserIcon />
+                </AvatarFallback>
+              </Avatar>
+            </UserAvatarDropDown>
           </div>
         </div>
       </nav>
