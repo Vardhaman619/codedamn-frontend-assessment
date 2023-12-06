@@ -28,8 +28,8 @@ export default function TailwindcssIcon({ className, ...props }: IconProps) {
           y2="55.8363"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#131416" />
-          <stop offset="1" stop-color="#1A1B1F" />
+          <stop stopColor="#131416" />
+          <stop offset="1" stopColor="#1A1B1F" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1244_128538"
@@ -39,8 +39,8 @@ export default function TailwindcssIcon({ className, ...props }: IconProps) {
           y2="50.0679"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#B0FF4D" />
-          <stop offset="1" stop-color="#FFE926" />
+          <stop stopColor="#B0FF4D" />
+          <stop offset="1" stopColor="#FFE926" />
         </linearGradient>
       </defs>
     </svg>

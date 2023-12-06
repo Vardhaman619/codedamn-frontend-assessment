@@ -1,5 +1,5 @@
 import { cn } from "~/lib/utils";
-import { IconProps } from "../types";
+import { type IconProps } from "../types";
 
 export default function DeleteIcon({ className, ...props }: IconProps) {
   return (

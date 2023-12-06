@@ -78,8 +78,8 @@ export default function MongoDbIcon({ className, ...props }: IconProps) {
           y2="55.8363"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#131416" />
-          <stop offset="1" stop-color="#1A1B1F" />
+          <stop stopColor="#131416" />
+          <stop offset="1" stopColor="#1A1B1F" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1244_128287"
@@ -89,8 +89,8 @@ export default function MongoDbIcon({ className, ...props }: IconProps) {
           y2="44.5731"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#048CD7" />
-          <stop offset="1" stop-color="#7AD6FF" />
+          <stop stopColor="#048CD7" />
+          <stop offset="1" stopColor="#7AD6FF" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_1244_128287"
@@ -100,8 +100,8 @@ export default function MongoDbIcon({ className, ...props }: IconProps) {
           y2="42.0018"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" stop-opacity="0.37" />
-          <stop offset="1" stop-color="white" />
+          <stop stopColor="white" stop-opacity="0.37" />
+          <stop offset="1" stopColor="white" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_1244_128287"
@@ -111,8 +111,8 @@ export default function MongoDbIcon({ className, ...props }: IconProps) {
           y2="15.0565"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#B0FF4D" />
-          <stop offset="1" stop-color="#FFE926" />
+          <stop stopColor="#B0FF4D" />
+          <stop offset="1" stopColor="#FFE926" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_1244_128287"
@@ -122,8 +122,8 @@ export default function MongoDbIcon({ className, ...props }: IconProps) {
           y2="15.0565"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#B0FF4D" />
-          <stop offset="1" stop-color="#FFE926" />
+          <stop stopColor="#B0FF4D" />
+          <stop offset="1" stopColor="#FFE926" />
         </linearGradient>
       </defs>
     </svg>

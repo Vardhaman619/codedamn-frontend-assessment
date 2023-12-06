@@ -33,8 +33,8 @@ export default function Nodejsicon({ className, ...props }: IconProps) {
           y2="55.8363"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#131416" />
-          <stop offset="1" stop-color="#1A1B1F" />
+          <stop stopColor="#131416" />
+          <stop offset="1" stopColor="#1A1B1F" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1330_134794"
@@ -44,8 +44,8 @@ export default function Nodejsicon({ className, ...props }: IconProps) {
           y2="31.4181"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#B0FF4D" />
-          <stop offset="1" stop-color="#FFE926" />
+          <stop stopColor="#B0FF4D" />
+          <stop offset="1" stopColor="#FFE926" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_1330_134794"
@@ -55,8 +55,8 @@ export default function Nodejsicon({ className, ...props }: IconProps) {
           y2="31.4181"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#B0FF4D" />
-          <stop offset="1" stop-color="#FFE926" />
+          <stop stopColor="#B0FF4D" />
+          <stop offset="1" stopColor="#FFE926" />
         </linearGradient>
       </defs>
     </svg>
