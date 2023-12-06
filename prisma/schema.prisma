@@ -111,6 +111,7 @@ model Education {
 }
 
 model Certificate {
+  id             String   @id @default(cuid())
   image          String
   imageKey       String
   title          String
@@ -118,8 +119,6 @@ model Certificate {
   credentialLink String?
   userId         String
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([title, userId])
 }
 
 model Playground {
