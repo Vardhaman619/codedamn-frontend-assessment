@@ -36,7 +36,6 @@ export default async function ProfileEditPage() {
     redirect("/api/auth/sigin");
     return;
   }
-  // console.log({ userProfileData });
   const {
     about,
     dob,

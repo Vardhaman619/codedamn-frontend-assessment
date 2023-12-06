@@ -20,7 +20,6 @@ async function checkAndDeletePreviousImage(userId: string) {
       throw Error("previous image not deleted sucessfully");
       return;
     }
-    console.log("deleted image sucessfully");
   }
 }
 export default async function profileFormAction(data: FormData) {
@@ -59,30 +58,34 @@ export default async function profileFormAction(data: FormData) {
     if (image) {
       const imageUploadResponse = await uploadThing.uploadFiles(image);
       if (imageUploadResponse.error) {
-        console.log("image upload error ", imageUploadResponse.error);
         return {
           error: true,
           message: "Image Upload Error",
         } as const;
       }
-      await checkAndDeletePreviousImage(session.user.id);
-      await db.user.update({
-        where: {
-          id: session.user.id,
-        },
-        data: {
-          dob,
-          gender,
-          name,
-          showAchievementBadges,
-          showFollowersFollowing,
-          showXP,
-          about,
-          image: imageUploadResponse.data.url,
-          imageKey: imageUploadResponse.data.key,
-          profession,
-        },
-      });
+      try {
+        await checkAndDeletePreviousImage(session.user.id);
+        await db.user.update({
+          where: {
+            id: session.user.id,
+          },
+          data: {
+            dob,
+            gender,
+            name,
+            showAchievementBadges,
+            showFollowersFollowing,
+            showXP,
+            about,
+            image: imageUploadResponse.data.url,
+            imageKey: imageUploadResponse.data.key,
+            profession,
+          },
+        });
+      } catch (error) {
+        await uploadThing.deleteFiles([imageUploadResponse.data.key]);
+        throw error;
+      }
       revalidatePath("/edit");
       return {
         success: true,
